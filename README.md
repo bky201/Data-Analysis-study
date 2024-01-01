@@ -5,307 +5,376 @@ with our data analysis. The main scope is to identify which algorithms give the 
 
 ## Table of Contents
 * [Data Analysis](#data-analysis)
-* [3.1 Data Description](#31-data-description)
-* [3.2 Data Preprocessing](#32-data-preprocessing) 
-  * [3.2.1 Data analysis software tools](#321-data-analysis-software-tools)
-  * [3.2.2 Handling Missing Values using Multiple Imputation](#322-handling-missing-values-using-multiple-imputation)
-  * [3.2.3 Data Exploration and Visualization](#323-data-exploration-and-visualization) 
-* [3.3 Numerical Feature Scaling](#33-numerical-feature-scaling)
-  * [3.3.1 Min-Max Normalization](#331-min-max-normalization)
-  * [3.3.2 Z-Score Normalization](#332-z-score-normalization)
-  * [3.3.3 Robustscaler Normalization](#333-robustscaler-normalization) 
-* [3.4 Dimensionality reduction](#34-dimensionality-reduction)
-  * [3.4.1 Autoencoder](#341-autoencoder) 
-  * [3.4.2 Principal Component Analysis (PCA)](#342-principal-component-analysis-pca)
-  * [3.4.3 Truncated Singular Value Decomposition (SVD)](#343-truncated-singular-value-decomposition-svd)
-  * [3.4.4 Gaussian Random Projection](#344-gaussian-random-projection)
-  * [3.4.5 Sparse Random Projection](#345-sparse-random-projection)
-* [3.5 Regression Models](#35-regression-models)
-  * [3.5.1 Extreme Gradient Boosting (XGBoost)](#351-extreme-gradient-boosting-xgboost)
-  * [3.5.2 Multilayer Perceptron (MLP)](#352-multilayer-perceptron-mlp)
-  * [3.5.3 Random Forest](#353-random-forest)
-* [3.6 Model Evaluation Metric](#36-model-evaluation-metric)
-  * [3.6.1 R-squared](#361-r-squared)
-  * [3.6.2 Root Mean Square Error (RMSE)](#362-root-mean-square-error-rmse)
-* [4.1 Data Cleaning](#41-data-cleaning)
-  * [4.1.1 Data Type Modification](#411-data-type-modification)
-  * [4.1.2 Columns Removal and Renaming](#412-columns-removal-and-renaming)
-  * [4.1.3 Missing Value Detection](#413-missing-value-detection)
-* [4.2 Data Distribution and Exploration](#42-data-distribution-and-exploration)
-  * [4.2.1 Data Distribution with Min-Max Normalization](#421-data-distribution-with-min-max-normalization)
-  * [4.2.2 Data Distribution with Z-Score Normalization](#422-data-distribution-with-z-score-normalization)
-  * [4.2.3 Data Distribution with Robustscaler Normalization](#423-data-distribution-with-robustscaler-normalization)
-* [4.3 Correlation between features](#43-correlation-between-features)
-* [4.4 Feature Scaling and Dimensionality Reduction](#44-feature-scaling-and-dimensionality-reduction)
-  * [4.4.1 Feature Scaling followed by Autoencoder Dimensionality Reudction](#441-feature-scaling-followed-by-autoencoder-dimensionality-reudction)
-  * [4.4.2 Feature Scaling followed by Principal Component Analysis (PCA)](#442-feature-scaling-followed-by-principal-component-analysis-pca)
-  * [4.4.3 Feature Scaling followed by Truncated Singular Value Decomposition (Truncated SVD)](#443-feature-scaling-followed-by-truncated-singular-value-decomposition-truncated-svd)
-  * [4.4.4 Feature Scaling followed by Gaussian Random Projection](#444-feature-scaling-followed-by-gaussian-random-projection)
-  * [4.4.5 Feature Scaling followed by Sparse Random Projection](#445-feature-scaling-followed-by-sparse-random-projection)
-* [5 Results and Discussion](#5-results-and-discussion)
+* [Data Description](#data-description)
+* [Data Preprocessing](#data-preprocessing) 
+  * [Data analysis software tools](#data-analysis-software-tools)
+  * [Handling Missing Values using Multiple Imputation](#handling-missing-values-using-multiple-imputation)
+  * [Data Exploration and Visualization](#data-exploration-and-visualization) 
+* [Numerical Feature Scaling](#numerical-feature-scaling)
+  * [Min-Max Normalization](#min-max-normalization)
+  * [Z-Score Normalization](#z-score-normalization)
+  * [Robustscaler Normalization](#robustscaler-normalization) 
+* [Dimensionality reduction](#dimensionality-reduction)
+  * [Autoencoder](#autoencoder) 
+  * [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
+  * [Truncated Singular Value Decomposition (SVD)](#truncated-singular-value-decomposition-svd)
+  * [Gaussian and Sparse Random Projection](#gaussian-and-sparse-random-projection) 
+* [Regression Models](#regression-models)
+  * [Extreme Gradient Boosting (XGBoost)](#extreme-gradient-boosting-xgboost)
+  * [Multilayer Perceptron (MLP)](#multilayer-perceptron-mlp)
+  * [Random Forest](#random-forest)
+* [Model Evaluation Metric](#model-evaluation-metric)
+  * [R-squared](#r-squared)
+  * [Root Mean Square Error (RMSE)](#root-mean-square-error-rmse)
+* [Data Cleaning](#data-cleaning)
+  * [Data Type Modification](#data-type-modification)
+* [Data Distribution and Exploration](#data-distribution-and-exploration)
+  * [Data Distribution with Min-Max Normalization](#data-distribution-with-min-max-normalization)
+  * [Data Distribution with Z-Score Normalization](#data-distribution-with-z-score-normalization)
+  * [Data Distribution with Robustscaler Normalization](#data-distribution-with-robustscaler-normalization)
+* [Correlation between features](#correlation-between-features)
+* [Feature Scaling and Dimensionality Reduction](#feature-scaling-and-dimensionality-reduction)
+  * [Feature Scaling followed by Autoencoder Dimensionality Reudction](#feature-scaling-followed-by-autoencoder-dimensionality-reudction)
+  * [Feature Scaling followed by Principal Component Analysis (PCA)](#feature-scaling-followed-by-principal-component-analysis-pca)
+  * [Feature Scaling followed by Truncated Singular Value Decomposition (Truncated SVD)](#feature-scaling-followed-by-truncated-singular-value-decomposition-truncated-svd)
+  * [Feature Scaling followed by Gaussian Random Projection](#feature-scaling-followed-by-gaussian-random-projection)
+  * [Feature Scaling followed by Sparse Random Projection](#feature-scaling-followed-by-sparse-random-projection)
+* [Results and Discussion](#results-and-discussion)
 
 
 
 
-## 3.1 Data Description 
-3.1 Overview of the top 5 entries of the dataset 
+## Data Description 
+
+The data used in this study is available online from the [kaggle](https://www.kaggle.com/datasets/dgluesen/sales-and-workload-data-from-retail-industry) website. The raw data contains generalized information about a real-world retail stores which is often used for actual analytical processing. Most industries’ data format is usually not
+suitable to be processed directly in machine learning models. As a result, such data must be preprocessed in such a way that the algorithm can easily understand and interpret the features of data. Another important aspect of data preprocessing is
+that it reduces the data by obtaining the most relevant features, thus making the learning algorithm to consume less memory and process faster.
+
+#### Overview of the top 5 entries of the dataset 
 
 ![fig-31](./result-images/fig-31.png)
 
-## 3.2 Data Preprocessing 
+## Data Preprocessing 
 
-3.2 Architecture of data preprocessing flow chart 
+#### Architecture of data preprocessing flow chart 
 
 <p align="center"><img src="./result-images/fig-32.png"
         alt="flow chart"></p>
 
-### 3.2.1 Data analysis software tools 
-### 3.2.2 Handling Missing Values using Multiple Imputation 
+### Data analysis software tools 
+
+Data analysis was completed using Python 3.6 in Jupyter notebook along with the following modules:
+
+• Pandas for Data analysis and manipulation
+
+• NumPy for Numerical computation
+
+• Matplotlib, Seaborn for Visualisation and plotting
+
+• Scikit-Learn, Keras for Machine learning
+
+### Handling Missing Values using Multiple Imputation 
+
+Missing data can be handled in a variety of ways. Parameter estimation, single value imputation and multiple imputation (MI) techniques are the most common techniques used for handling missing values. MI is one of the best methods for handling missing values.
 
 ![algo-1](./result-images/algo-1.png)
 
-### 3.2.3 Data Exploration and Visualization 
-## 3.3 Numerical Feature Scaling 
-### 3.3.1 Min-Max Normalization 
-### 3.3.2 Z-Score Normalization 
-### 3.3.3 Robustscaler Normalization 
-## 3.4 Dimensionality reduction 
-### 3.4.1 Autoencoder 
+### Data Exploration and Visualization 
+
+When we are working on a data analysis project and want to get a quick first-hand impression of our data, we can achieve that in two key steps: Data Exploration and Data Visualization. Data Exploration is an essential part of Exploratory Data Analysis (EDA). Depending on the general information we observe at the data exploration step, we can decide what to do in the subsequent steps. Therefore, to select our machine learning model and summarize our findings, the assumptions we make at the exploration phase plays an essential role.
+
+Some of the primary and widely used charts are: 
+
+ - Bar graph 
+ - Line graph
+ - Heatmap  
+ - Histogram 
+ - Scatter plot, and 
+ - Box plot.
+
+## Numerical Feature Scaling 
+
+Feature scaling is a technique for narrowing the range of continuous variables to a defined interval, such as [0,1] or [1,-1]. It is a typical data transformation technique used in data preprocessing and one of the classification methods that require distance measurements such as PCA, KNN, and SVM models. Furthermore, feature scaling accelerates the NN backpropagation technique for classification problems.
+
+### Min-Max Normalization 
+
+Min-Max scaling is a method for limiting the size of a feature to a specified range of [-1, 1] or [0, 1].
+
+### Z-Score Normalization 
+
+The Z-score is the most commonly used approach for converting all variables to a standard scale by subtracting the mean value and scale it with the standard deviation.
+
+### Robustscaler Normalization 
+
+This technique is the same as Min-max normalization, except it scales the data variables using interquartile values rather than min and max values.
+
+## Dimensionality reduction 
+
+Dimensionality reduction is a preprocessing stage in which high-dimensional data is converted into lower-dimensional data. Our analysis method utilizes five different algorithms: autoencoders, principal component analysis (PCA), Gaussian random projection, Sparse random projection, and Truncated Singular Value decomposition (Truncated SVD).
+
+### Autoencoder 
 
 ![algo-2](./result-images/algo-2.png)
 
 ![algo-4](./result-images/algo-4.png)
 
-3.3 Autoencoder architecture 
+#### Autoencoder architecture 
 
 ![fig-33](./result-images/fig-33.png)
 
-### 3.4.2 Principal Component Analysis (PCA) 
+### Principal Component Analysis (PCA) 
 
 ![algo-3](./result-images/algo-3.png)
 
-### 3.4.3 Truncated Singular Value Decomposition (SVD) 
+### Truncated Singular Value Decomposition (SVD) 
 
 ![algo-5](./result-images/algo-5.png)
 
-3.4 Truncated Singular Values Decomposition 
+#### Truncated Singular Values Decomposition 
 
 ![fig-34](./result-images/fig-34.png)
 
-### 3.4.4 Gaussian Random Projection 
+### Gaussian and Sparse Random Projection 
 
 ![algo-6](./result-images/algo-6.png)
 
-### 3.4.5 Sparse Random Projection 
-## 3.5 Regression Models 
-### 3.5.1 Extreme Gradient Boosting (XGBoost) 
-### 3.5.2 Multilayer Perceptron (MLP) 
-### 3.5.3 Random Forest 
-## 3.6 Model Evaluation Metric 
-### 3.6.1 R-squared 
-### 3.6.2 Root Mean Square Error (RMSE)
-## 4.1 Data Cleaning 
-### 4.1.1 Data Type Modification 
 
-4.1 Data type before cleaning 
+## Regression Models 
+A regression problem is a technique that uses an independent variable to estimate the quantitative output of a dependent variable. The type of regression models used in this section is nonparametric regressions models such as eXtreme Gradient Boosting (XGBoost), Random Forest and deep neural networks (e.g., Multilayer Perceptrons (MLP)).
+
+### Extreme Gradient Boosting (XGBoost) 
+
+The XGBoost method is a more advanced version of the gradient boosting technique. It is an advanced machine learning algorithm for classification and regression problems that uses an end-to-end tree boosting strategy.
+
+### Multilayer Perceptron (MLP) 
+
+Multilayer perceptrons (MLPs) are deep feed-forward neural networks specifically developed for multi-class supervised learning tasks. MLP network is trained on a collection of input-output pairs to learn how to represent the relationships between those inputs and outputs.
+
+### Random Forest 
+
+It is a machine learning ensemble algorithm that may be used to create a classification or regression model. RF fits multiple trees by picking a random subset (bootstrap sample) of the predictors from the original data and provides a classification or regression prediction. Finally, the output is defined by the initial issue description, the mode of the classes for classification or the mean forecast for regression.
+
+## Model Evaluation Metric 
+### R-squared 
+
+The coefficient of determination in statistics is the fraction of the variation in the dependent variable that can be predicted by the independent variable. In the best-case scenario, the modeled values precisely match the observed values, resulting in squared sum error of regression (Sr) = 0 and R-squared = 1. A baseline model, which always predicts the targets, will have R-squared = 0. A negative R2 indicates a predictions that are worse than the baseline.
+
+### Root Mean Square Error (RMSE)
+
+The root-mean-square error (RMSE) is a commonly used metric for comparing values predicted by a model or estimator to values observed. The square root of the mean values of the square of all errors gives the root mean squared error (RMSE).
+
+## Data Cleaning 
+
+Most of the data collected from different warehouses are potentially not clean and contain incomplete data. The first step to take after uploading the data set is to clean the data because not cleaned data can lead to a range of problems, such as model miss prediction, errors in parameter estimation and wrong conclusions about the data analysis result.
+
+### Data Type Modification 
+
+The data type should indicate the correct format of the values in each column. For example, numeric columns can be assigned a strings or vice versa which is a wrong identification. Additionally, categorical data should convert to ’category’ data type, making the dataset smaller in memory and more uncomplicated to utilize in further analysis.
+
+#### Data type before cleaning 
 
 ![fig-41](./result-images/fig-41.png)
 
-### 4.1.2 Columns Removal and Renaming 
-### 4.1.3 Missing Value Detection 
-
-4.2 Percentage of missing values 
+#### Percentage of missing values 
 
 ![fig-42](./result-images/fig-42.png)
 
-4.3 Nullity Matrix 
+#### Nullity Matrix 
+
+The nullity matrix helps represent the data in dense layers with a sparkline at the right end that gives the general information of the data by removing rows with missing data out of the row.
 
 ![fig-43](./result-images/fig-43.png)
 
-4.4 Heat map 
+#### Heat map 
+
+Heatmap is a method of visualizing the correlation between missing values. If the value of correlation between two
+variables is 1, it means both variables contain missing values. If the value of correlation is 0, it means that a variable that exists or does not exist does not
+depend on each other.
 
 ![fig-44](./result-images/fig-44.png)
 
-4.5 dendrogram of missing data 
+#### Dendrogram of missing data 
+
+It is a hierarchical representation between features. A dendrogram represents the data in hierarchical clustering. All the variables except the customer variable belong to one cluster. The similarity between variables increases if the total distance between the variable or the average distance along the y-axis is much smaller than zero. The dendrogram arranges similar features near each other in the tree.
 
 ![fig-45](./result-images/fig-45.png)
 
-## 4.2 Data Distribution and Exploration 
+## Data Distribution and Exploration 
 
-4.6 Probability Density of a continuous variable distribution
+#### Probability Density of a continuous variable distribution
 
 ![fig-46](./result-images/fig-46.png)
 
-4.7 Bar graph for monthly sales distribution vs. country of sales
+#### Bar graph for monthly sales distribution vs. country of sales
 
 ![fig-47](./result-images/fig-47.png)
 
-4.8 Bar graph for monthly sales distribution vs. sales item
+#### Bar graph for monthly sales distribution vs. sales item
 
 ![fig-48](./result-images/fig-48.png)
 
-4.9 Bar graph for monthly sales distribution vs. city of sales
+#### Bar graph for monthly sales distribution vs. city of sales
 
 ![fig-49](./result-images/fig-49.png)
 
-4.10 Scatter plot for HoursLease vs. HoursOwn
+#### Scatter plot for HoursLease vs. HoursOwn
 
 ![fig-410](./result-images/fig-410.png)
 
-4.11 Scatter pair plot of continuous variables
+#### Scatter pair plot of continuous variables
 
 ![fig-411](./result-images/fig-411.png)
 
-4.12 Boxplots for sales Units vs. Department name
+#### Boxplots for sales Units vs. Department name
 
 ![fig-412](./result-images/fig-412.png)
 
-4.13 Boxplots for Hours own vs. Department name 
+#### Boxplots for Hours own vs. Department name 
 
 ![fig-413](./result-images/fig-413.png)
 
-4.14 Boxplots for Hours Lease vs. Department name 
+#### Boxplots for Hours Lease vs. Department name 
 
 ![fig-414](./result-images/fig-414.png)
 
-4.15 Boxplots for Turnover vs. Department name 
+#### Boxplots for Turnover vs. Department name 
 
 ![fig-415](./result-images/fig-415.png)
 
-4.16 Boxplots for Area vs. Department name 
+#### Boxplots for Area vs. Department name 
 
 ![fig-416](./result-images/fig-416.png)
 
-### 4.2.1 Data Distribution with Min-Max Normalization 
+### Data Distribution with Min-Max Normalization 
 
-4.17 Data distribution after minmax normalization 
+#### Data distribution after minmax normalization 
 
 ![fig-417](./result-images/fig-417.png)
 
-4.20 Scatter pair plot after minmax normalization 
+#### Scatter pair plot after minmax normalization 
 
 ![fig-420](./result-images/fig-420.png)
 
-### 4.2.2 Data Distribution with Z-Score Normalization 
+### Data Distribution with Z-Score Normalization 
 
-4.18 Data distribution after Z-Score Normalization 
+#### Data distribution after Z-Score Normalization 
 
 ![fig-418](./result-images/fig-418.png)
 
-4.21 Scatter pair plot after Z-score Normalization 
+#### Scatter pair plot after Z-score Normalization 
 
 ![fig-421](./result-images/fig-421.png)
 
-### 4.2.3 Data Distribution with Robustscaler Normalization 
+### Data Distribution with Robustscaler Normalization 
 
-4.19 Data distribution after Robustscaler Normalization
+#### Data distribution after Robustscaler Normalization
 
 ![fig-419](./result-images/fig-419.png)
 
-4.22 Scatter pair plot after Robustscaler normalization 
+#### Scatter pair plot after Robustscaler normalization 
 
 ![fig-422](./result-images/fig-422.png)
 
-## 4.3 Correlation between features 
+## Correlation between features 
 
-4.23 Heatmap of continuous variables 
+#### Heatmap of continuous variables 
 
 ![fig-423](./result-images/fig-423.png)
 
-## 4.4 Feature Scaling and Dimensionality Reduction 
+## Feature Scaling and Dimensionality Reduction 
 
-### 4.4.1 Feature Scaling followed by Autoencoder Dimensionality Reudction 
+### Feature Scaling followed by Autoencoder Dimensionality Reudction 
 
-4.24 Scatter plot of Autoencoder with Normalization 
+#### Scatter plot of Autoencoder with Normalization 
 
 ![fig-424](./result-images/fig-424.png)
 
-4.25 Scatter plot of Auroencoder with Robustscaler Normalization 
+#### Scatter plot of Auroencoder with Robustscaler Normalization 
 
 ![fig-425](./result-images/fig-425.png)
 
-4.26 Scatter plot of Autoencoder with Standardization 
+#### Scatter plot of Autoencoder with Standardization 
 
 ![fig-426](./result-images/fig-426.png)
 
-### 4.4.2 Feature Scaling followed by Principal Component Analysis (PCA) 
+### Feature Scaling followed by Principal Component Analysis (PCA) 
 
-4.27 Scater plot of PCA with Normalization 
+#### Scater plot of PCA with Normalization 
 
 ![fig-427](./result-images/fig-427.png)
 
-4.28 Scatter plot of PCA with RobustScaler 
+#### Scatter plot of PCA with RobustScaler 
 
 ![fig-428](./result-images/fig-428.png)
 
-4.29 Scatter plot of PCA with Standardization 
+#### Scatter plot of PCA with Standardization 
 
 ![fig-429](./result-images/fig-429.png)
 
-### 4.4.3 Feature Scaling followed by Truncated Singular Value Decomposition (Truncated SVD) 
+### Feature Scaling followed by Truncated Singular Value Decomposition (Truncated SVD) 
 
-4.30 Scatter plot of Truncated SVD after Normalization 
+#### Scatter plot of Truncated SVD after Normalization 
 
 ![fig-430](./result-images/fig-430.png)
 
-4.31 Scatter plot of Truncated SVD with RobustScaler 
+#### Scatter plot of Truncated SVD with RobustScaler 
 
 ![fig-431](./result-images/fig-431.png)
 
-4.32 Scatter plot of Truncated SVD with Standardization 
+#### Scatter plot of Truncated SVD with Standardization 
 
 ![fig-432](./result-images/fig-432.png)
 
-### 4.4.4 Feature Scaling followed by Gaussian Random Projection 
+### Feature Scaling followed by Gaussian Random Projection 
 
-4.33 Scater plot of Gaussian Random Projection with normalization 
+#### Scater plot of Gaussian Random Projection with normalization 
 
 ![fig-433](./result-images/fig-433.png)
 
-4.34 Scatter plot of Gaussian Random Projection with RobustScaler 
+#### Scatter plot of Gaussian Random Projection with RobustScaler 
 
 ![fig-434](./result-images/fig-434.png)
 
-4.35 Scatter plot of Gaussian Random Projection with Z-score normalization
+#### Scatter plot of Gaussian Random Projection with Z-score normalization
 
 ![fig-435](./result-images/fig-435.png)
 
-### 4.4.5 Feature Scaling followed by Sparse Random Projection 
+### Feature Scaling followed by Sparse Random Projection 
 
-4.36 Scatter plot of Sparse Random Projection with Normalization 
+#### Scatter plot of Sparse Random Projection with Normalization 
 
 ![fig-436](./result-images/fig-436.png)
 
-4.37 Scatter plot of Sparse Random Projection with RobustScaler 
+#### Scatter plot of Sparse Random Projection with RobustScaler 
 
 ![fig-437](./result-images/fig-437.png)
 
-4.38 Scatter plot of Sparse Random Projection with Standardization
+#### Scatter plot of Sparse Random Projection with Standardization
 
 ![fig-438](./result-images/fig-438.png)
 
-## 5 Results and Discussion
+## Results and Discussion
  
-5.1 R-squared value for minmax normalized data with different dimensionality reduction methods on three models
+#### R-squared value for minmax normalized data with different dimensionality reduction methods on three models
 
 ![fig-51](./result-images/fig-51.png)
 
-5.2 R-squared value for Robustscaler normalized data with different dimensionality reduction methods on three models
+#### R-squared value for Robustscaler normalized data with different dimensionality reduction methods on three models
 
 ![fig-52](./result-images/fig-52.png)
 
-5.3 R-squared value for Z score standardized data with different dimensionality reduction methods on three models 
+#### R-squared value for Z score standardized data with different dimensionality reduction methods on three models 
 
 ![fig-53](./result-images/fig-53.png)
 
-5.4 RMSE value for minmax normalized data with different dimensionality reduction methods on three models 
+#### RMSE value for minmax normalized data with different dimensionality reduction methods on three models 
 
 ![fig-54](./result-images/fig-54.png)
 
-5.5 RMSE value for Robustscaler normalized data with different dimensionality reduction methods on three models 
+#### RMSE value for Robustscaler normalized data with different dimensionality reduction methods on three models 
 
 ![fig-55](./result-images/fig-55.png)
 
-5.6 RMSE value for Z score standardized data with different dimensionality reduction methods on three models 
+#### RMSE value for Z score standardized data with different dimensionality reduction methods on three models 
 
 ![fig-56](./result-images/fig-56.png)
