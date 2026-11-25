@@ -1,0 +1,53 @@
+data:
+  raw_path: "data/1_raw/salesworkload.xlsx"
+  interim_path: "data/2_interim/"
+  processed_path: "data/3_processed/"
+  sample_path: "data/4_sample/"
+  target_column: "SalesUnits"
+
+cleaning:
+  drop_columns: ['StoreID','DeptID', 'Customer']          # columns to remove
+  min_unique_threshold: 2   # drop columns with fewer unique values
+  max_missing_ratio: 0.5    # drop columns with >50% missing
+
+imputation:
+  n_imputations: 2
+  max_iter: 2
+  tol: 0.001
+
+scaling:
+  methods: [minmax, standard, robust]   # all three, not just one
+
+dim_reduction:
+  methods: [pca, svd, random, autoencoder]
+  n_components: 8
+  autoencoder:
+    hidden_dims: [64, 32]
+    epochs: 30              # MAX cap (early stopping will stop sooner). Small datasets (<10k samples): Often require only 10–50 epochs.
+    lr: 0.001
+    batch_size: 256     # Balance: Use 64–256 for accuracy-efficiency trade-off, 128 better.
+    patience: 10             # stop after 10 epochs of no val improvement
+    min_delta: 1.0e-4        # minimum improvement to reset patience
+    val_fraction: 0.1        # 10% of data for monitoring
+    max_train_rows: 2000     # subsample if > 2000 rows
+
+models:
+  xgboost:
+    n_estimators: 100 # While 100 is a common default, 200 is often used to find a balance between performance and efficiency; however, too many estimators can lead to overfitting if not properly regularized.
+    max_depth: 6
+    learning_rate: 0.1
+    random_state: 42
+  random_forest:
+    n_estimators: 100
+    max_depth: 15
+    random_state: 42
+  mlp:
+    hidden_layer_sizes: [128, 64]
+    activation: relu
+    max_iter: 200
+    learning_rate_init: 0.001
+    random_state: 42
+
+evaluation:
+  test_size: 0.2
+  random_state: 42
