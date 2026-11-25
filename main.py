@@ -14,6 +14,7 @@ import numpy as np
 from src.sample_data import generate_sample_data
 from src.cleaning import clean_data
 from src.imputation import impute_data, save_imputed
+from src.scaling import scale_all_methods
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
@@ -33,7 +34,6 @@ def main():
     """
 
     if "--smoke" in sys.argv:
-        # Override config for fast CI run
         cfg["imputation"]["n_imputations"] = 1
         cfg["dim_reduction"]["autoencoder"]["epochs"] = 10
         cfg["scaling"]["methods"] = ["standard"]  # only one method
@@ -45,7 +45,6 @@ def main():
     results_dir = Path("results")
     results_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── 1. Clean ──
     logger.info("=" * 60)
     logger.info("STAGE 1: Data Cleaning")
     logger.info("=" * 60)
@@ -55,7 +54,6 @@ def main():
         config=cfg,
     )
 
-    # ── 2. Impute ──
     logger.info("=" * 60)
     logger.info("STAGE 2: Multiple Imputation")
     logger.info("=" * 60)
@@ -67,6 +65,18 @@ def main():
     )
     save_imputed(all_imputed, cfg["data"]["interim_path"])
     df = pooled
+
+    logger.info("=" * 60)
+    logger.info("STAGE 3: Scaling")
+    logger.info("=" * 60)
+    all_scaled, y_train, y_test = scale_all_methods(
+        df, cfg, target_col, cfg["data"]["processed_path"]
+    )
+    X_train_base, X_test_base, _ = all_scaled[cfg["scaling"]["methods"][0]]
+
+    X_df = df.drop(columns=[target_col], errors="ignore")
+    num_cols = X_df.select_dtypes(include=[np.number]).columns.tolist()
+    cat_cols = X_df.select_dtypes(include=["object", "str", "category"]).columns.tolist()
 
 if __name__ == "__main__":
     main()
