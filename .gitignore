@@ -1,0 +1,67 @@
+# Notebooks: ignore checkpoints, NOT the .ipynb itself
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+# Keep the notebook CODE in git, but not its outputs
+# (handled by nbstripout below)
+
+
+# Data (never commit raw or intermediate data)
+data/1_raw/
+data/2_interim/
+data/3_processed/
+
+# Secrets
+.env
+.env.local
+.venv
+*.pem
+*.key
+
+# Model artifacts (large, regenerable)
+results/*.npy
+results/*.joblib
+results/*.pkl
+results/*.csv
+results/*.json
+results/figures/*.png
+data/*.parquet
+
+text.md
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Test / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+
+# Databases (local)
+*.sqlite
+*.sqlite3
+*.db
+
+# Experiment tracking (if applicable)
+wandb/
+mlruns/
+
+# Other large data formats
+*.parquet
+*.h5
+*.hdf5
+
+# Trained models (if stored locally)
+models/
+result-images/*.png
+notebooks/*.ipynb
+/*.ipynb

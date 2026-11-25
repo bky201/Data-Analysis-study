@@ -1,0 +1,24 @@
+repos:
+  # Global / Language Agnostic Sanity Checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=20000']
+  # Git-history secret scan
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  # Python linting
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.5.0
+    hooks:
+      - id: flake8
+        args: ['--max-line-length=127', '--select=E9,F63,F7,F82']
+        types: [python]
+        name: Flake8 (Syntax Safeguard)
