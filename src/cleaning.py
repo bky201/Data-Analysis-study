@@ -9,7 +9,6 @@ def clean_data(raw_path: Path, out_path: Path, config: dict) -> pd.DataFrame:
 
     df = pd.read_excel(raw_path, index_col=None, skiprows=1)
 
-    # ── Datetime columns (skip in numeric loop) ──────────────────
     DATETIME_COLUMNS = {"MonthYear"}
 
     # ── Numeric coercion with mean-fill ─────────────────────────
@@ -37,7 +36,6 @@ def clean_data(raw_path: Path, out_path: Path, config: dict) -> pd.DataFrame:
 
     # ── 1. Drop explicitly listed columns (from config) ─────────
     drop_cols = clean_cfg.get("drop_columns", [])
-    # # Also keep your hardcoded ID columns
     drop_cols = list(set(drop_cols + ['StoreID', 'DeptID', 'Customer']))
     drop_cols = [c for c in drop_cols if c in df.columns]  # safe filter
     if drop_cols:

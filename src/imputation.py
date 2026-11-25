@@ -19,26 +19,20 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 def impute_data(df: pd.DataFrame, n_samples: int, max_iter: int, impute_path: Path):
     """Apply cleaning rules defined in config."""
-    # impute_cfg = config["imputation"]
     cat_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
     num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
 
-    # ── Precompute encoding ONCE (outside all loops) ──
     enc_dict = {}
     df_cat = df[cat_cols].copy()
     for col in cat_cols:
         categories=df[~df[col].isna()][col].unique().tolist()
 
         enc = OrdinalEncoder(categories=[categories], handle_unknown='use_encoded_value', unknown_value=-1)
-        # nonulls = df[col].dropna().values.reshape(-1, 1)
-        # nonulls = df.loc[~df[col].isna()][col].values.reshape(-1, 1)
         nonulls = df.loc[~df[col].isna()][col].to_numpy().reshape(-1, 1)
         enc.fit(nonulls)
         enc_dict[col] = enc
-        # encoded_dict[col]=enc.transform(nonulls.reshape(-1, 1)).ravel()
         df_cat.loc[~df_cat[col].isna(), [col]] = enc.transform(nonulls.reshape(-1, 1)).ravel().astype(str)
 
-    # enc_dict_df = pd.DataFrame(data=encoded_dict)
     print(f"[encoded clean] Shape after cleaning: {df_cat.shape}")
     Path(impute_path).mkdir(parents=True, exist_ok=True)
     df_cat.to_csv(Path(impute_path).joinpath("interim_encoded.csv"), index=False)
@@ -46,13 +40,12 @@ def impute_data(df: pd.DataFrame, n_samples: int, max_iter: int, impute_path: Pa
 
     col_indices = {col: i for i, col in enumerate(cat_cols)}
 
-    # Precompute original modes for sanitize fallback
     original_modes = {}
     for col in cat_cols:
         vals = df[col].dropna()
-        original_modes[col] = vals.mode().iloc[0]  # keep as category, not int
+        original_modes[col] = vals.mode().iloc[0]
 
-    all_imputed = []  # list of full DataFrames (one per imputation)
+    all_imputed = []
 
     for i in range(n_samples):
         work = df.copy()
@@ -77,7 +70,6 @@ def impute_data(df: pd.DataFrame, n_samples: int, max_iter: int, impute_path: Pa
             work[cat_cols] = imp_cat.fit_transform(work[cat_cols])
             print("completed", cat_cols)
 
-            # Jitter ONLY imputed positions
             work[cat_cols] += np.random.normal(0, 0.1, work[cat_cols].shape) * cat_mask
 
             # Sanitize → valid int indices
@@ -119,7 +111,6 @@ def impute_data(df: pd.DataFrame, n_samples: int, max_iter: int, impute_path: Pa
 
         all_imputed.append(work)
 
-    # ── Pool ──
     pooled = pd.DataFrame(index=df.index)
     for col in cat_cols:
         stacked = np.array([d[col].values for d in all_imputed])
