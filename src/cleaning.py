@@ -36,7 +36,7 @@ def clean_data(raw_path: Path, out_path: Path, config: dict) -> pd.DataFrame:
 
     # ── 1. Drop explicitly listed columns (from config) ─────────
     drop_cols = clean_cfg.get("drop_columns", [])
-    drop_cols = list(set(drop_cols + ['StoreID', 'DeptID', 'Customer']))
+    drop_cols = list(set(drop_cols + ['Customer']))
     drop_cols = [c for c in drop_cols if c in df.columns]  # safe filter
     if drop_cols:
         df = df.drop(columns=drop_cols)
@@ -59,6 +59,10 @@ def clean_data(raw_path: Path, out_path: Path, config: dict) -> pd.DataFrame:
     if high_missing:
         df = df.drop(columns=high_missing)
         print(f"[cleaning] Dropped high-missing columns (>{max_missing:.0%}): {high_missing}")
+
+    # ── 4. Drop rows with duplicate values ────────────
+    df = df.drop_duplicates()
+    print(df.duplicated().sum())
 
     # ── Final summary ───────────────────────────────────────────
     print(f"[cleaning] Shape after cleaning: {df.shape}")
